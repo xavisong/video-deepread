@@ -176,6 +176,32 @@ Outputs:
 Read the four overview images plus `frame_plan_top.md`. Drill down into
 `frame_plan.json` only if the user asks about a specific cue or frame.
 
+## Which path a video takes
+
+Four discrete signals decide the path — the tool never estimates a "text vs image ratio":
+
+| Signal | Test | Result |
+|---|---|---|
+| Subtitles | `status: nosub` / `track_too_sparse` | Skip the semantic layer, vision only |
+| Motion | `insufficient_visual_change: true` (>60 s and <6 keyframes) | Text only; don't even read the 4 overview sheets |
+| Visual demand | cues mentioning bars / prices / patterns, mapped to keyframes | How many single frames to read (0 = overviews only) |
+| Auth | `status: auth_required` (YouTube bot-check) | Stop and refresh cookies — not a degradation |
+
+Per material type:
+
+| Material | How to tell | Path |
+|---|---|---|
+| Slides / deck / whiteboard talk | Read 1–2 overviews first: the on-screen text mostly echoes the narration | `--text-only`, saves the 4 overview sheets (~6k tokens) |
+| Same, but the slides carry charts / formulas / music notation / screen-only info | That content is missing from the narration | Default path — **it can only be read from the images**, subtitles cannot recover it |
+| Talking head over a static image (podcast) | `insufficient_visual_change: true` after extraction | Automatic text-only |
+| Sparse or missing subtitles, information in the images | `status: nosub` or `track_too_sparse` | Vision only — **and the read budget has to be raised with the user** (below) |
+
+**Vision-only has a hard ceiling.** With no cues the semantic reading list is empty, so the
+default budget is 4 overview sheets = **48 cells**, while the keyframe pool is often far
+larger (measured: 127 keyframes → 4 sheets cover **48/127 ≈ 38%**). Report that coverage and
+ask the user whether to add sheets (`--sheet-max-sheets 6` / `8`, ≈+1.5k tokens each), read
+targeted single frames (1.5k each), or start with the 4 sheets and come back for detail.
+
 ## Modes
 
 - **Default**: complete semantic plan plus a reading budget of
