@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Secrets and cookies
+.env
+cookies/
+*cookie*.txt
+bilibili.txt
+youtube.txt
+x.txt
+reddit.txt
+zhihu.txt
+
+# Media and subtitle outputs
+*.mp4
+*.mkv
+*.webm
+*.mov
+*.vtt
+*.srt
+*.json3
+video_understanding/
+video_deepread/
+keyframes/
+frames/
+out/
+*.log
+
+# Generated data
+cues*.json
+frame_plan*.json
+semantic_needs.json
+coverage.json
+keyframes.json

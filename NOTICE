@@ -1,0 +1,25 @@
+Video Deepread
+Copyright (C) 2026 xavisong
+
+This project includes code derived from:
+
+  ztough926/video-understanding
+  https://github.com/ztough926/video-understanding
+  Licensed under the GNU General Public License v3.0.
+
+Derived files:
+
+  - scripts/extract_keyframes.py
+  - scripts/selftest.py
+  - references/parameters.md
+
+Modifications made in this project:
+
+  - Copied the visual layer and integrated it with the text and alignment
+    layers.
+  - Added a subtitle text layer for Bilibili and YouTube.
+  - Added a semantic frame planner, a reading budget, and coverage reports.
+  - Added merge_rolling_cues.py, fetch_subs.py, semantic_frames.py, and
+    selftest_semantic.py.
+
+The full license text is in LICENSE.
