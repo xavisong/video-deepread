@@ -4,8 +4,10 @@ English | [中文](README.zh.md)
 
 A subtitle-first video understanding pipeline for long videos. It is
 harness-agnostic: the scripts run standalone and can be driven by Claude
-Code, a DeepSeek harness, or any agent framework. The included `SKILL.md`
-is the Claude Code integration; a DeepSeek harness adapter is planned.
+Code, DSH (DeepSeek Harness), or any agent framework. The included `SKILL.md`
+covers both integrations; its §8 lists the three things that differ between
+them (`read_image` instead of `Read`, long downloads as background jobs, and
+read-only cookie files under a sandbox).
 
 Video Deepread turns a long video into a small, auditable evidence set:
 timestamped subtitle cues, difference-based keyframes, overview sheets,

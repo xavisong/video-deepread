@@ -3,8 +3,9 @@
 [English](README.md) | 中文
 
 面向长视频的“字幕优先”理解管线。**不绑定 Claude Code**：脚本可独立运行，也可被
-Claude Code、DeepSeek harness 或任意 agent 框架调用。仓库里的 `SKILL.md` 是
-Claude Code 集成；DeepSeek harness 适配计划中。
+Claude Code、DSH（DeepSeek Harness）或任意 agent 框架调用。仓库里的 `SKILL.md`
+同时写两个 harness 的用法，第八节列了它们之间仅有的三处差异（读图用 `read_image`
+而非 `Read`、长下载走后台 job、沙箱下 cookie 文件只读）。
 
 它把长视频压成一组小而有据可查的证据：带时间戳的字幕、基于画面差异的关键帧、
 总览图，以及带读取预算的语义补帧计划。适合讲座、交易复盘、教程、图表讲解等
