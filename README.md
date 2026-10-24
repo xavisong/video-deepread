@@ -1,6 +1,11 @@
 # Video Deepread
 
-A subtitle-first video understanding pipeline for Claude Code.
+English | [中文](README.zh.md)
+
+A subtitle-first video understanding pipeline for long videos. It is
+harness-agnostic: the scripts run standalone and can be driven by Claude
+Code, a DeepSeek harness, or any agent framework. The included `SKILL.md`
+is the Claude Code integration; a DeepSeek harness adapter is planned.
 
 Video Deepread turns a long video into a small, auditable evidence set:
 timestamped subtitle cues, difference-based keyframes, overview sheets,
@@ -12,6 +17,27 @@ are used to verify specific claims.
 It is not a native video model. It reads a curated set of frames instead
 of watching every frame, which makes it roughly 10-50x cheaper on long
 videos while keeping timestamps and evidence on disk.
+
+## Compared with native video models
+
+Native video models watch a sampled frame sequence (often 1 fps).
+Video Deepread reads a small, curated evidence set instead.
+
+| | Video Deepread | Native video model |
+|---|---|---|
+| Input | subtitles + selected keyframes | sampled frames (+ audio) |
+| Cost (30 min) | ~50-70k tokens | ~0.5-3M tokens |
+| Timestamps | exact cue/frame references | implicit |
+| Small text | full-resolution frames | often downsampled |
+| Motion/tone | weak | strong |
+| Auditability | evidence on disk | black box |
+
+**Advantages:** roughly 10-50x cheaper on long videos; precise timestamps
+and drill-down; readable full-resolution frames; reusable artifacts and
+a coverage report.
+
+**Trade-off:** it does not see motion, gestures, or tone. For short or
+visual-first clips, a native video model is the better tool.
 
 ## How it works
 
@@ -59,6 +85,13 @@ The scripts can also be used standalone:
 ```bash
 python -m pip install -r requirements.txt
 ```
+
+## Harness support
+
+- **Claude Code**: clone into `~/.claude/skills/video-deepread`; use `SKILL.md`.
+- **Standalone**: run the scripts directly; no harness required.
+- **DeepSeek harness**: adapter planned; the text, visual, and alignment
+  scripts are harness-independent.
 
 ## Quick start
 

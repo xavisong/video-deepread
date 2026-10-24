@@ -11,6 +11,10 @@ description: >
 
 # video-deepread：视频深读（字幕主干 + 画面证据）
 
+> Harness-agnostic: the scripts can be run standalone or from any agent
+> framework. This `SKILL.md` documents the Claude Code integration; a
+> DeepSeek harness adapter is planned.
+
 三层，缺一不可：
 
 1. **文本层**：B 站 cookies 抓软字幕 → 带时间戳的 cue 列表。
