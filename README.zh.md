@@ -64,6 +64,29 @@ Claude Code 集成；DeepSeek harness 适配计划中。
 git clone https://github.com/xavisong/video-deepread.git ~/.claude/skills/video-deepread
 ```
 
+作为 DSH（DeepSeek Harness）技能 —— DSH 读自己的技能根，不读 `~/.claude`：
+
+```bash
+git clone https://github.com/xavisong/video-deepread.git ~/.agents/skills/video-deepread
+```
+
+Windows 下是 `%USERPROFILE%\.claude\skills\video-deepread` 和
+`%USERPROFILE%\.agents\skills\video-deepread`。
+
+两个 harness 想**共用一份**，克隆一次再给另一边建链接（Windows，无需管理员）：
+
+```powershell
+New-Item -ItemType Junction `
+  -Path   $env:USERPROFILE\.agents\skills\video-deepread `
+  -Target $env:USERPROFILE\.claude\skills\video-deepread
+```
+
+macOS / Linux：
+
+```bash
+ln -s ~/.claude/skills/video-deepread ~/.agents/skills/video-deepread
+```
+
 独立使用：
 
 ```bash
@@ -73,8 +96,10 @@ python -m pip install -r requirements.txt
 ## Harness 支持
 
 - **Claude Code**：克隆到 `~/.claude/skills/video-deepread`，按 `SKILL.md` 使用。
+- **DSH（DeepSeek Harness）**：克隆到 `~/.agents/skills/video-deepread`（或 junction
+  到 Claude Code 那份）。`SKILL.md` 第八节列了两边只有三处差异：读图用
+  `read_image` 而非 `Read`、长下载走后台 job、沙箱下 cookie 文件只读。
 - **独立运行**：直接调用脚本，不需要任何 harness。
-- **DeepSeek harness**：适配计划中；文本、视觉、对齐脚本与 harness 无关。
 
 ## 快速开始
 

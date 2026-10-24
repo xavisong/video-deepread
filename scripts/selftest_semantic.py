@@ -7,13 +7,14 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import contextlib
 import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
-from fetch_subs import parse_subs, write_outputs  # noqa: E402
+from fetch_subs import _as_netscape, parse_subs, write_outputs  # noqa: E402
 from semantic_frames import (  # noqa: E402
     bars_in, levels_in, tag_cue, nearest_kf, merge_need, select_frames,
 )
@@ -38,8 +39,38 @@ def check(name, cond, detail=""):
         raise SystemExit(1)
 
 
+def _workdir():
+    """
+    自检用的可写目录。三级兜底，因为技能本体常常装在只读位置：
+
+    1. 系统临时区（`mkdtemp`，**不删**——只有几 KB，换干净的输出）；
+    2. 当前工作目录（DSH 里就是工作区，可写；沙箱只读临时区时这一级救命）；
+    3. 技能目录（普通环境兜底）。
+
+    任意一级都要先做**真实写入探测**再返回：临时区在受限环境里经常"建得出、写不进"。
+    三级都不行就明确报错，别用 PermissionError 半死不活地崩。
+    """
+    candidates = [
+        lambda: Path(tempfile.mkdtemp(prefix="deepread_selftest_")),
+        lambda: Path.cwd() / ".deepread_selftest",
+        lambda: Path(__file__).resolve().parent.parent / ".selftest_tmp",
+    ]
+    errs = []
+    for make in candidates:
+        try:
+            d = make()
+            d.mkdir(parents=True, exist_ok=True)
+            probe = d / ".probe"
+            probe.write_bytes(b"ok")
+            probe.unlink()
+            return contextlib.nullcontext(str(d))
+        except OSError as e:
+            errs.append(f"{e}")
+    raise SystemExit("找不到可写目录跑自检（已试临时区/当前目录/技能目录）：" + " | ".join(errs))
+
+
 def main() -> int:
-    with tempfile.TemporaryDirectory() as td:
+    with _workdir() as td:
         td = Path(td)
         srt = td / "test.ai-zh.srt"
         srt.write_text(SRT, encoding="utf-8")
@@ -54,6 +85,39 @@ def main() -> int:
             "WEBVTT\n\n00:00:00.000 --> 00:00:02.000\n<c>hello</c>\n",
             encoding="utf-8")
         check("vtt parse", len(parse_subs(vtt)) == 1)
+
+        # 稀疏字幕轨（实测 B 站有些 ai-zh 只有 3 条「♪ 音乐 ♪」却有 5 分钟时长）
+        # 必须判成 nosub，否则语义层会拿几句歌词生成一份高覆盖率的假计划。
+        sparse_srt = td / "sparse.ai-zh.srt"
+        sparse_srt.write_text(
+            "1\n00:00:01,000 --> 00:00:02,000\n♪ 音乐 ♪\n\n"
+            "2\n00:02:00,000 --> 00:02:01,000\n音乐\n\n"
+            "3\n00:05:10,000 --> 00:05:11,000\n♪ 音乐 ♪\n",
+            encoding="utf-8")
+        sparse_meta = write_outputs(td / "sparse_out", "bilibili", "BVsparse",
+                                    {"ai-zh": sparse_srt})
+        check("稀疏轨判 nosub", sparse_meta["status"] == "nosub", str(sparse_meta.get("status")))
+        check("稀疏轨给 reason", sparse_meta.get("reason") == "track_too_sparse")
+        check("稀疏轨带密度指标", sparse_meta.get("chars_per_sec", 1) < 0.3,
+              str(sparse_meta.get("chars_per_sec")))
+        # 正常密度的字幕不能被误判
+        ok_meta = write_outputs(td / "ok_out", "bilibili", "BVok", {"ai-zh": srt})
+        check("正常字幕仍为 ok", ok_meta["status"] == "ok", str(ok_meta.get("status")))
+        # 浏览器插件默认导 JSON，yt-dlp 只认 Netscape —— 必须自动转（实测用户每次都踩）
+        jck = td / "cookies.json"
+        jck.write_text(
+            '[{"domain": ".youtube.com", "hostOnly": false, "path": "/",'
+            ' "secure": true, "expirationDate": 1827381740, "name": "__Secure-3PSID",'
+            ' "value": "abc"}, {"domain": ".youtube.com", "secure": true,'
+            ' "session": true, "name": "PREF", "value": "x"}]',
+            encoding="utf-8")
+        conv = _as_netscape(jck, td / "ckout")
+        body = [l for l in conv.read_text(encoding="utf-8").splitlines() if l]
+        check("JSON cookie 自动转 Netscape", body[0].startswith("# Netscape"), body[0][:20])
+        check("JSON cookie 条目数", len(body) == 3, str(len(body) - 1))
+        check("会话 cookie 过期时间写 0", body[2].split("\t")[4] == "0", body[2].split("\t")[4])
+        # Netscape 输入必须原样放行，不能被当成 JSON 再转一次
+        check("Netscape 原样放行", _as_netscape(srt, td / "ckout2") == srt)
 
         out = td / "out"
         meta = write_outputs(out, "bilibili", "BVtest", {"ai-zh": srt})

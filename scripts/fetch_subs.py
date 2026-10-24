@@ -72,10 +72,128 @@ def extract_id(s: str, platform: str) -> str:
 
 
 def find_ytdlp() -> list[str]:
+    """
+    优先用 `python -m yt_dlp`（python 环境里的模块），而不是 PATH 里的 yt-dlp.exe。
+
+    2026-10 实测：本机 PATH 的 yt-dlp.exe 是 2026.06.09，比 python 模块（2026.07.04）
+    旧一个版本，拉 B 站网页会 `RemoteDisconnected`；换模块同一个 URL 立刻成功。
+    YouTube 侧 skill 文档也已明确要 `python -m yt_dlp`（n-challenge）。
+    """
+    try:
+        import yt_dlp  # noqa: F401
+        return [sys.executable, "-m", "yt_dlp"]
+    except ImportError:
+        pass
     exe = shutil.which("yt-dlp")
     if exe:
         return [exe]
     return [sys.executable, "-m", "yt_dlp"]
+
+
+def _as_netscape(path: Path, work_dir: Path) -> Path:
+    """
+    Cookie 文件格式兜底：浏览器插件默认导的是 **JSON**（Cookie-Editor 的 Export），
+    yt-dlp 只认 **Netscape**。实测用户按插件默认导出 → 直接喂 yt-dlp 会报
+    "does not look like a Netscape format cookies file"。这里自动转换，别让人手工转。
+
+    返回可用于 yt-dlp 的路径（若是 JSON，写一份到 work_dir 下的临时文件）。
+    """
+    try:
+        raw = path.read_text(encoding="utf-8-sig", errors="replace").strip()
+    except OSError:
+        return path
+    if not raw or raw[0] not in "[{":
+        return path
+    try:
+        data = json.loads(raw)
+    except ValueError:
+        return path
+    rows = data if isinstance(data, list) else (data.get("cookies") or [])
+    if not rows:
+        return path
+    lines = ["# Netscape HTTP Cookie File"]
+    for c in rows:
+        if not isinstance(c, dict) or "name" not in c:
+            continue
+        exp = "0" if c.get("session") else str(int(float(c.get("expirationDate") or 0)))
+        domain = c.get("domain", "")
+        if not c.get("hostOnly"):
+            domain = domain.lstrip(".")
+        lines.append("\t".join([
+            domain, "TRUE", c.get("path") or "/",
+            "TRUE" if c.get("secure") else "FALSE", exp,
+            c["name"], str(c.get("value", "")).replace("\t", "").replace("\n", ""),
+        ]))
+    tmp = work_dir / ".cookies_tmp.txt"
+    tmp.parent.mkdir(parents=True, exist_ok=True)
+    tmp.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return tmp
+
+
+def cookie_arg(cookies: Path, work_dir: Path) -> tuple[Path, Path | None]:
+    """
+    yt-dlp 的 --cookies 语义是 "read cookies from and **dump** cookie jar in"：
+    退出时会把 cookie jar 写回同一个文件。cookies 通常放在 ~/.claude/cookies/，
+    在受限环境（只读文件系统 / 沙箱 / 只读账户）里没有写权限 → yt-dlp 在 close()
+    时抛 PermissionError、退出码非 0，于是**字幕明明抓到了却被判失败**。
+
+    所以：能写就原样用；写不了就复制一份到输出目录，用完删掉（副本不长期落盘）。
+    JSON 导出的 cookie 先自动转成 Netscape（同样是临时文件）。
+    返回 (传给 yt-dlp 的路径, 需要清理的临时文件或 None)。
+    """
+    converted = _as_netscape(cookies, work_dir)
+    if converted != cookies:
+        return converted, converted
+    try:
+        with open(cookies, "r+b"):
+            pass
+        return cookies, None
+    except OSError:
+        tmp = work_dir / ".cookies_tmp.txt"
+        shutil.copy2(cookies, tmp)
+        return tmp, tmp
+
+
+def probe_page(work_dir: Path, url: str, cookies: Path | None,
+               cookies_from_browser: str | None,
+               proxy: str | None) -> tuple[bool, str]:
+    """
+    便宜的"页面到底能不能拉"探测（只取标题，不下载任何东西）。
+
+    存在的理由：YouTube 用 `--write-auto-subs` 抓字幕时，bot-check 会伪装成
+    `[info] There are no subtitles for the requested languages` 并且**退出码 0**，
+    光看退出码分不清"这个视频真没字幕"和"页面被风控拦了"。两者处理方式完全不同
+    （一个换 --langs，一个必须换 cookie），所以必须探一次。
+    返回 (页面可用?, 诊断片段)。探测本身超时不算认证失败，避免误报。
+    """
+    cmd = find_ytdlp() + ["--no-warnings", "--no-update", "--no-playlist",
+                          "--skip-download", "--print", "%(title)s", url]
+    cookie_tmp = None
+    if cookies_from_browser:
+        cmd += ["--cookies-from-browser", cookies_from_browser]
+    elif cookies:
+        use, cookie_tmp = cookie_arg(cookies, work_dir)
+        cmd += ["--cookies", str(use)]
+    if proxy:
+        cmd += ["--proxy", proxy]
+    try:
+        res = subprocess.run(cmd, capture_output=True, text=True,
+                             encoding="utf-8", errors="replace", timeout=120)
+    except subprocess.TimeoutExpired:
+        return True, "probe timeout"
+    finally:
+        if cookie_tmp is not None:
+            try:
+                cookie_tmp.unlink()
+            except OSError:
+                pass
+    out = ((res.stdout or "") + (res.stderr or "")).strip()
+    low = out.lower()
+    bot = ("sign in to confirm" in low) or ("not a bot" in low)
+    last = out.splitlines()[-1][:300] if out else f"rc={res.returncode}"
+    if res.returncode != 0 or bot:
+        return False, last
+    return True, last
 
 
 def _ts(h, m, s, ms) -> float:
@@ -144,17 +262,30 @@ def write_outputs(out_dir: Path, platform: str, vid: str,
             json.dumps({"platform": platform, "id": vid, "lang": lang,
                         "count": len(cues), "cues": cues},
                        ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # 字幕轨存在 ≠ 有内容：实测 B 站有些视频的 ai-zh 只有 3 条「♪ 音乐 ♪」，
+    # 却有 5 分钟时长。这种"稀疏轨"如果按 ok 返回，语义层会拿 3 句歌词生成一份
+    # 装着 100% 覆盖率的假计划——比没有字幕更危险，所以按 nosub 处理。
+    text = "".join(c["text"] for c in primary)
+    chars = len(re.sub(r"\s", "", text))
+    span = float(primary[-1]["end"]) if primary else 0.0
+    rate = (chars / span) if span > 0 else 0.0
+    sparse = span > 60 and (chars < 100 or rate < 0.3)
+
+    status = "nosub" if sparse else "ok"
+    meta = {"status": status, "platform": platform, "id": vid,
+            "lang": primary_lang, "count": len(primary), "cues": primary,
+            "available": {l: len(c) for l, c in parsed.items()},
+            "chars": chars, "chars_per_sec": round(rate, 2),
+            "span": round(span, 1)}
+    if sparse:
+        meta["reason"] = "track_too_sparse"
+        meta["hint"] = (f"字幕轨只有 {len(primary)} 条 / {chars} 字（{rate:.2f} 字/秒），"
+                        "等于没有内容：改走纯画面，或另做 ASR / 硬字幕 OCR")
     (out_dir / "cues.json").write_text(
-        json.dumps({"platform": platform, "id": vid, "lang": primary_lang,
-                    "count": len(primary), "cues": primary},
-                   ensure_ascii=False, indent=2), encoding="utf-8")
-    (out_dir / "transcript.txt").write_text(
-        "\n".join(c["text"] for c in primary), encoding="utf-8")
-    return {
-        "status": "ok", "platform": platform, "id": vid,
-        "lang": primary_lang, "count": len(primary), "cues": primary,
-        "available": {l: len(c) for l, c in parsed.items()},
-    }
+        json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "transcript.txt").write_text(text, encoding="utf-8")
+    return meta
 
 
 def fetch(url: str, platform: str, out_dir: Path, cookies: Path | None,
@@ -176,10 +307,12 @@ def fetch(url: str, platform: str, out_dir: Path, cookies: Path | None,
         cmd += ["--write-auto-subs"]
     else:
         cmd += ["--write-subs"]
+    cookie_tmp = None
     if cookies_from_browser:
         cmd += ["--cookies-from-browser", cookies_from_browser]
     elif cookies:
-        cmd += ["--cookies", str(cookies)]
+        use_cookies, cookie_tmp = cookie_arg(cookies, out_dir)
+        cmd += ["--cookies", str(use_cookies)]
     if direct:
         # B 站默认直连：显式空 proxy 可绕开 Windows 系统代理
         cmd += ["--proxy", ""]
@@ -194,6 +327,12 @@ def fetch(url: str, platform: str, out_dir: Path, cookies: Path | None,
                              encoding="utf-8", errors="replace", timeout=300)
     except subprocess.TimeoutExpired:
         raise RuntimeError("yt-dlp 超过 300 秒未完成；检查网络/代理或 cookies")
+    finally:
+        if cookie_tmp is not None:
+            try:
+                cookie_tmp.unlink()
+            except OSError:
+                pass
     if res.returncode != 0:
         err = (res.stderr or "").strip().splitlines()[-10:]
         msg = "yt-dlp 抓字幕失败：\n" + "\n".join(err)
@@ -282,15 +421,36 @@ def main(argv=None) -> int:
                 print(f"ERROR: {e}", file=sys.stderr)
                 return 1
             meta = write_outputs(out_dir, platform, vid, subs)
+            # YouTube 的 bot-check 在 --write-auto-subs 路径上表现为
+            # 「There are no subtitles for the requested languages」+ 退出码 0，
+            # 和"真没字幕"长得一模一样。这里补一次便宜探测把两者分开：
+            # 页面都拉不到 = 认证问题（cookie 过期/出口不一致），必须让人去换 cookie；
+            # 页面能拉 = 才是真的没这几种语言的字幕，换 --langs 再试。
+            if platform == "youtube" and meta.get("status") == "nosub":
+                ok, detail = probe_page(out_dir, args.target, cookies,
+                                        args.cookies_from_browser, args.proxy)
+                if not ok:
+                    meta["status"] = "auth_required"
+                    meta["reason"] = "youtube_bot_check"
+                    meta["detail"] = detail
+                    meta["hint"] = (
+                        "YouTube 不是没字幕，而是页面被风控拦了（Sign in to confirm "
+                        "you're not a bot）→ 重新导出 cookies（Chrome 走哪个出口导出，"
+                        "yt-dlp 就带同一个 --proxy），导出后立刻用；cookie 只有十几分钟寿命。"
+                        "也行：关掉 Chrome 后 --cookies-from-browser chrome。")
 
     summary = {
         "status": meta.get("status"), "platform": platform, "id": vid,
         "lang": meta.get("lang"), "count": meta.get("count", 0),
         "available": meta.get("available", {}), "out_dir": str(out_dir),
         "cached": bool(meta.get("cached")),
+        "chars": meta.get("chars"), "chars_per_sec": meta.get("chars_per_sec"),
     }
+    for k in ("reason", "hint", "detail"):
+        if meta.get(k):
+            summary[k] = meta[k]
     if meta.get("status") == "nosub":
-        summary["hint"] = "没有软字幕；改走纯画面，或另做 ASR/硬字幕 OCR"
+        summary.setdefault("hint", "没有软字幕；改走纯画面，或另做 ASR/硬字幕 OCR")
         print(json.dumps(summary, ensure_ascii=False) if args.json_summary
               else "nosub：没有抓到软字幕。", file=sys.stderr)
     elif args.json_summary:

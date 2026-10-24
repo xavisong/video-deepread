@@ -78,7 +78,29 @@ As a Claude Code skill:
 git clone https://github.com/xavisong/video-deepread.git ~/.claude/skills/video-deepread
 ```
 
-On Windows, clone into `%USERPROFILE%\.claude\skills\video-deepread`.
+As a DSH (DeepSeek Harness) skill — DSH reads its own skill root, not `~/.claude`:
+
+```bash
+git clone https://github.com/xavisong/video-deepread.git ~/.agents/skills/video-deepread
+```
+
+On Windows the two paths are `%USERPROFILE%\.claude\skills\video-deepread` and
+`%USERPROFILE%\.agents\skills\video-deepread`.
+
+To keep **one** checkout for both harnesses, clone once and link the other
+(Windows, no admin required):
+
+```powershell
+New-Item -ItemType Junction `
+  -Path   $env:USERPROFILE\.agents\skills\video-deepread `
+  -Target $env:USERPROFILE\.claude\skills\video-deepread
+```
+
+macOS / Linux:
+
+```bash
+ln -s ~/.claude/skills/video-deepread ~/.agents/skills/video-deepread
+```
 
 The scripts can also be used standalone:
 
@@ -89,9 +111,11 @@ python -m pip install -r requirements.txt
 ## Harness support
 
 - **Claude Code**: clone into `~/.claude/skills/video-deepread`; use `SKILL.md`.
+- **DSH (DeepSeek Harness)**: clone into `~/.agents/skills/video-deepread`
+  (or junction to the Claude Code copy). `SKILL.md` §8 lists the three harness
+  differences: `read_image` instead of `Read`, long downloads as a background
+  job, and read-only cookie files under the sandbox.
 - **Standalone**: run the scripts directly; no harness required.
-- **DeepSeek harness**: adapter planned; the text, visual, and alignment
-  scripts are harness-independent.
 
 ## Quick start
 

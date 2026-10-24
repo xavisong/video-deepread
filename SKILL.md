@@ -12,8 +12,8 @@ description: >
 # video-deepread：视频深读（字幕主干 + 画面证据）
 
 > Harness-agnostic: the scripts can be run standalone or from any agent
-> framework. This `SKILL.md` documents the Claude Code integration; a
-> DeepSeek harness adapter is planned.
+> framework. 本 `SKILL.md` 同时写 Claude Code 与 DSH（DeepSeek Harness）的用法；
+> 两边差异只有三处（读图工具名、后台长任务、沙箱下 cookies 只读），见第八节。
 
 三层，缺一不可：
 
@@ -123,8 +123,18 @@ python scripts/fetch_subs.py "<YouTube URL>" \
 规则：
 
 - `cues.json` 已存在且未加 `--force` 时直接复用缓存。
-- 返回 `status: "nosub"` 时**不要假装语义对齐可用**：明确告诉用户没有软字幕，
-  继续只做视觉层，并建议另走 ASR 或硬字幕 OCR。
+- **`status` 有三种，处理方式完全不同，别混**：
+
+  | status | 含义 | 该怎么办 |
+  |---|---|---|
+  | `ok` | 有可用软字幕 | 正常走语义对齐 |
+  | `nosub` | 真没有字幕，**或字幕轨是空的** | 别假装语义对齐可用：只做视觉层，建议 ASR / 硬字幕 OCR。`reason: "track_too_sparse"` 时说明有轨但没内容（实测有视频的 `ai-zh` 只有 3 条「♪ 音乐 ♪」却有 5 分钟） |
+  | `auth_required` | **页面被风控拦了，不是没字幕** | 换 cookie。`reason: "youtube_bot_check"` 时按 `hint` 做：重新导出 cookie（同出口）、立刻用，或关掉浏览器用 `--cookies-from-browser` |
+
+  稀疏轨判据：字幕跨度 > 60 秒且（正文 < 100 字 或 < 0.3 字/秒）。实测正常复盘视频是 ~3 字/秒。
+  门槛存在的理由：稀疏轨如果按 `ok` 返回，语义层会拿 3 句歌词生成一份"覆盖率 100%"的假计划，
+  **比没有字幕更危险**。
+- `summary` 里带 `chars` / `chars_per_sec`，先看密度再决定要不要相信这份字幕。
 - 已有 SRT 时可离线复用：
   `python scripts/fetch_subs.py --from-srt <srt或vtt> -o <工作目录>`。
 - YouTube 自动字幕下载成功后，先合并滚动字幕：
@@ -166,7 +176,7 @@ python scripts/fetch_subs.py "<YouTube URL>" \
 
 先按字幕判断是否需要画面：`--text-only` 时跳过这一步。
 
-下载视频：B 站默认 1080p；YouTube 默认 **720p**（代理带宽有限）。
+下载视频：B 站默认 1080p；YouTube 默认 **720p**（够读图表文字，要看清小字再上 1080p）。
 
 ```bash
 # B 站：1080p
@@ -174,9 +184,12 @@ python -m yt_dlp --no-playlist \
   -f "bv*[height<=1080]+ba/b[height<=1080]" \
   --merge-output-format mp4 -o "<工作目录>/%(id)s.%(ext)s" "<B站URL>"
 
-# YouTube：720p（代理带宽有限）；带 list= 参数时 --no-playlist 只下当前视频
+# YouTube：默认 720p；带 list= 参数时 --no-playlist 只下当前视频
+# ⚠️ --js-runtimes node 是**必需**的：缺了它连格式列表都拿不到（只剩 storyboard），
+#    报错是 "Requested format is not available"，看起来像视频下架，其实是 n-challenge 没解。
 python -m yt_dlp --no-playlist --proxy socks5://127.0.0.1:1080 \
   --cookies ~/.claude/cookies/youtube.txt \
+  --js-runtimes node \
   -f "bv*[height<=720]+ba/b[height<=720]" \
   --merge-output-format mp4 -o "<工作目录>/%(id)s.%(ext)s" "<YouTube URL>"
 ```
@@ -194,6 +207,9 @@ python scripts/extract_keyframes.py "<视频路径>" \
 - 抽帧只负责建池子；语义计划默认完整，不需要 `--full`（保留为兼容别名）。
 - 如果 `insufficient_visual_change: true`：**改走 text-only**，连 4 张总览都别读。
 - 下载/抽帧预计超过 10 分钟时，先向用户确认。
+- Cookie 文件用 **Netscape** 格式（首行 `# Netscape HTTP Cookie File`）。若拿到的是 JSON
+  （部分浏览器插件的默认导出），`fetch_subs.py` 会自动转换；但把 JSON 直接喂给裸 yt-dlp
+  会报 `does not look like a Netscape format cookies file`。
 
 ### 4. 对齐层
 
@@ -298,3 +314,80 @@ python scripts/semantic_frames.py \
   - `semantic_frames.py`：按字幕语义挑补帧（规则 + 可选 LLM needs）。
   - `selftest_semantic.py`：离线自检。
 - 原 `video-understanding` 技能先保留，验证稳定后再删除。
+
+---
+
+## 八、DSH（DeepSeek Harness）适配
+
+**安装（两个 harness 装同一份代码）**
+
+```bash
+# Claude Code（读 ~/.claude/skills）
+git clone https://github.com/xavisong/video-deepread.git ~/.claude/skills/video-deepread
+
+# DSH（读 ~/.agents/skills，不读 ~/.claude）
+git clone https://github.com/xavisong/video-deepread.git ~/.agents/skills/video-deepread
+```
+
+只装一份、两边共用：克隆到其中一处，再给另一边建链接。
+
+```powershell
+# Windows（无需管理员）
+New-Item -ItemType Junction `
+  -Path   $env:USERPROFILE\.agents\skills\video-deepread `
+  -Target $env:USERPROFILE\.claude\skills\video-deepread
+```
+
+```bash
+# macOS / Linux
+ln -s ~/.claude/skills/video-deepread ~/.agents/skills/video-deepread
+```
+
+| 角色 | 路径 |
+|---|---|
+| 实体（Claude Code 读这个） | `~/.claude/skills/video-deepread/` |
+| 链接（DSH 读这个） | `~/.agents/skills/video-deepread/` → 指向上面 |
+
+改一处两边生效。DSH 是**运行时热发现**：装好当前会话的技能目录立刻刷新，不用重启；
+Claude Code 需要新会话。Python 用 `python`（本机 3.14），`ffmpeg` 已在 PATH。
+
+**与 Claude Code 只有三处差异**
+
+1. **读图工具**：DSH 用 `read_image`（`read` 只读文本）；CC 用 `Read`。
+   其余流程（先 4 张总览、再按读单读单帧、小字不硬读）完全一致。
+2. **长任务放后台**：DSH 的 shell 工具有超时，下载 + 抽帧要起后台 job 再收结果，
+   不要一条命令干等。实测 24:42 / 1080p：下载 49.2 MB 约 2 分钟，抽帧 302 帧约 3 分钟。
+3. **沙箱下三处只读/权限坑**（脚本已各自兜住，见下）。
+
+**沙箱三个坑（都已修在脚本里，DSH 上才暴露）**
+
+| 现象 | 根因 | 修法 |
+|---|---|---|
+| 字幕明明抓到了，却报 `yt-dlp 抓字幕失败` + `PermissionError` | `yt-dlp --cookies` 语义是 *read **and dump***，退出时要**回写** cookie 文件；`~/.claude/cookies/` 在工作区外只读 | `fetch_subs.cookie_arg()`：能写就原样用，写不了就复制到输出目录、用完删掉 |
+| B 站 `RemoteDisconnected` / 拉不到网页 | PATH 里的 `yt-dlp.exe` 比 python 模块旧一版（2026.06.09 vs .07.04） | `fetch_subs.find_ytdlp()`：**优先 `python -m yt_dlp`**，找不到模块才用 exe |
+| `selftest_semantic.py` 跑完以 `PermissionError` 收尾 | 系统临时区"建得出、删不掉"，`TemporaryDirectory` 退出时 chmod 失败 | `selftest_semantic._workdir()`：`mkdtemp` 不删 + 写入探测 + 兜底到技能目录 |
+| `--cookies-from-browser edge/chrome` 报 `Could not copy Chrome cookie database` + `WinError 5` | 沙箱拦的是**读浏览器 cookie 库**（不是写临时区——把 TEMP 指到工作区也照样失败） | **DSH 沙箱内不可用**。只能在普通窗口手动导出 Netscape `cookies.txt`（Chrome 插件 *Get cookies.txt LOCALLY*）放进 `~/.claude/cookies/` |
+
+**无软字幕时还能做什么（实测 `BV13MZRBUEWn`，5:18，原神音乐分析）**
+
+- 那条视频的 `ai-zh` 只有 3 条「♪ 音乐 ♪」→ `status: nosub` / `track_too_sparse`，语义层正确地什么都不做。
+- 但它的信息**全在屏幕上**（PPT 式文字卡 + 五线谱 + 音列数字 356/612/623/5261…）：4 张总览就把论点读全了
+  （四度音三音列、去 fa 自然小调阶、623 动机、526 大跳、571/713 特殊组、五声 × 琉球音阶互补）。
+  → **"没有字幕"不等于"没有信息"**，这类视频视觉层是主路径，不是降级方案。
+- `--subtitles`（底部字幕条）对这种**全屏文字卡无效**：裁出来大半是黑屏，只有恰好落在底部 16% 的那行字能读到。
+  它只服务"底部字幕"；全屏文字卡要看总览 + 单帧。
+
+**本次移植实测记录（`BV18xwyzcEwS`，Emini 日内 2026-3-18 复盘）**
+
+| 项 | 结果 |
+|---|---|
+| 文本层 | 446 条 `ai-zh` cue（+ 445 条 `ai-en` 可交叉校正），`transcript.txt` 4,522 字 ≈ 5.5k token（已去时间轴） |
+| 视觉层 | 1080p / 49.2 MB，38,025 帧 → **302 关键帧**，4 张总览，`insufficient_visual_change: false` |
+| 对齐层 | 172 条 cue 命中需求 → 完整计划 109 帧；读单 25 张（24.7 分钟，1 分钟 1 张） |
+| 计划覆盖 | bar 28/28 · 需求 172/172 · 高优先级 116/116（100%） |
+| 读单预期覆盖 | bar 19/28（68%）· 需求 57/172（33%）· 高优先级 47/116（40%） |
+| 实际读图（本次） | 4 张总览 + 4 张单帧 = 8 张 ≈ 12k token（读单 25 张会到 ~37.5k） |
+
+> **成本口径不变**：任何一张被读的图 ≈1.5k token；正文（去时间轴）≈1 token/字。
+> 所以 25 分钟视频的默认组合是 **字幕 5.5k + 4 总览 6k + 读单 25×1.5k**，
+> 想省就从读单砍，别从字幕砍——字幕才是主线。
