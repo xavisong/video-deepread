@@ -1,0 +1,309 @@
+[
+  {
+    "score": 1,
+    "kf_time": 10.167,
+    "kf_index": 5,
+    "kf_path": "examples/run/keyframes/frames/kf_006_10.167s.jpg",
+    "bars": [],
+    "terms": [],
+    "prices": [
+      "4130",
+      "4220"
+    ],
+    "cue_count": 1,
+    "cues": [
+      2
+    ],
+    "sample_text": "开盘后价格在 4130 到 4220 之间震荡，先看区间。",
+    "why": "4130,4220"
+  },
+  {
+    "score": 3,
+    "kf_time": 15.667,
+    "kf_index": 9,
+    "kf_path": "examples/run/keyframes/frames/kf_010_15.667s.jpg",
+    "bars": [
+      5
+    ],
+    "terms": [],
+    "prices": [],
+    "cue_count": 1,
+    "cues": [
+      3
+    ],
+    "sample_text": "第 5 根之前没有明确方向，成交量也偏小。",
+    "why": "bar 5"
+  },
+  {
+    "score": 4,
+    "kf_time": 20.167,
+    "kf_index": 12,
+    "kf_path": "examples/run/keyframes/frames/kf_013_20.167s.jpg",
+    "bars": [
+      8
+    ],
+    "terms": [
+      "回撤"
+    ],
+    "prices": [],
+    "cue_count": 1,
+    "cues": [
+      4
+    ],
+    "sample_text": "第 8 根出现第一次回撤，看着像假突破。",
+    "why": "bar 8; 回撤"
+  },
+  {
+    "score": 2,
+    "kf_time": 25.667,
+    "kf_index": 17,
+    "kf_path": "examples/run/keyframes/frames/kf_018_25.667s.jpg",
+    "bars": [],
+    "terms": [
+      "支撑"
+    ],
+    "prices": [
+      "4130"
+    ],
+    "cue_count": 1,
+    "cues": [
+      5
+    ],
+    "sample_text": "看这里，支撑位 4130 被反复测试了两次。",
+    "why": "支撑; 4130"
+  },
+  {
+    "score": 4,
+    "kf_time": 30.667,
+    "kf_index": 21,
+    "kf_path": "examples/run/keyframes/frames/kf_022_30.667s.jpg",
+    "bars": [
+      12
+    ],
+    "terms": [
+      "均线",
+      "收盘价"
+    ],
+    "prices": [],
+    "cue_count": 1,
+    "cues": [
+      6
+    ],
+    "sample_text": "第 12 根收盘价站上均线，结构开始转多。",
+    "why": "bar 12; 均线,收盘价"
+  },
+  {
+    "score": 2,
+    "kf_time": 35.667,
+    "kf_index": 25,
+    "kf_path": "examples/run/keyframes/frames/kf_026_35.667s.jpg",
+    "bars": [],
+    "terms": [
+      "水平线",
+      "阻力"
+    ],
+    "prices": [
+      "4220"
+    ],
+    "cue_count": 1,
+    "cues": [
+      7
+    ],
+    "sample_text": "这条水平线 4220 就是前面的阻力。",
+    "why": "水平线,阻力; 4220"
+  },
+  {
+    "score": 4,
+    "kf_time": 40.333,
+    "kf_index": 28,
+    "kf_path": "examples/run/keyframes/frames/kf_029_40.333s.jpg",
+    "bars": [
+      16
+    ],
+    "terms": [
+      "突破点"
+    ],
+    "prices": [
+      "4220"
+    ],
+    "cue_count": 1,
+    "cues": [
+      8
+    ],
+    "sample_text": "第 16 根放量突破 4220，突破点很干净。",
+    "why": "bar 16; 突破点; 4220"
+  },
+  {
+    "score": 2,
+    "kf_time": 45.667,
+    "kf_index": 33,
+    "kf_path": "examples/run/keyframes/frames/kf_034_45.667s.jpg",
+    "bars": [],
+    "terms": [
+      "回撤"
+    ],
+    "prices": [
+      "4220"
+    ],
+    "cue_count": 1,
+    "cues": [
+      9
+    ],
+    "sample_text": "突破后回踩 4220 没有跌破，属于正常回撤。",
+    "why": "回撤; 4220"
+  },
+  {
+    "score": 4,
+    "kf_time": 50.667,
+    "kf_index": 37,
+    "kf_path": "examples/run/keyframes/frames/kf_038_50.667s.jpg",
+    "bars": [
+      21
+    ],
+    "terms": [
+      "通道"
+    ],
+    "prices": [],
+    "cue_count": 1,
+    "cues": [
+      10
+    ],
+    "sample_text": "第 21 根进入加速段，通道上轨被拉开。",
+    "why": "bar 21; 通道"
+  },
+  {
+    "score": 2,
+    "kf_time": 55.167,
+    "kf_index": 39,
+    "kf_path": "examples/run/keyframes/frames/kf_040_55.167s.jpg",
+    "bars": [],
+    "terms": [
+      "阻力"
+    ],
+    "prices": [
+      "4310"
+    ],
+    "cue_count": 1,
+    "cues": [
+      11
+    ],
+    "sample_text": "这里给出目标位 4310，阻力位的等距测量。",
+    "why": "阻力; 4310"
+  },
+  {
+    "score": 4,
+    "kf_time": 60.667,
+    "kf_index": 44,
+    "kf_path": "examples/run/keyframes/frames/kf_045_60.667s.jpg",
+    "bars": [
+      26
+    ],
+    "terms": [
+      "高点"
+    ],
+    "prices": [],
+    "cue_count": 1,
+    "cues": [
+      12
+    ],
+    "sample_text": "第 26 根冲到本段高点附近，接近目标区。",
+    "why": "bar 26; 高点"
+  },
+  {
+    "score": 2,
+    "kf_time": 65.667,
+    "kf_index": 48,
+    "kf_path": "examples/run/keyframes/frames/kf_049_65.667s.jpg",
+    "bars": [],
+    "terms": [
+      "支撑"
+    ],
+    "prices": [
+      "4350"
+    ],
+    "cue_count": 1,
+    "cues": [
+      13
+    ],
+    "sample_text": "随后进入盘整，支撑上移到 4350 一线。",
+    "why": "支撑; 4350"
+  },
+  {
+    "score": 4,
+    "kf_time": 70.667,
+    "kf_index": 52,
+    "kf_path": "examples/run/keyframes/frames/kf_053_70.667s.jpg",
+    "bars": [
+      31
+    ],
+    "terms": [
+      "缺口",
+      "跳空"
+    ],
+    "prices": [],
+    "cue_count": 1,
+    "cues": [
+      14
+    ],
+    "sample_text": "第 31 根出现缺口，直接跳空高开。",
+    "why": "bar 31; 缺口,跳空"
+  },
+  {
+    "score": 2,
+    "kf_time": 75.667,
+    "kf_index": 56,
+    "kf_path": "examples/run/keyframes/frames/kf_057_75.667s.jpg",
+    "bars": [],
+    "terms": [
+      "缺口"
+    ],
+    "prices": [
+      "4350"
+    ],
+    "cue_count": 1,
+    "cues": [
+      15
+    ],
+    "sample_text": "缺口回补，价格回落到 4350 附近。",
+    "why": "缺口; 4350"
+  },
+  {
+    "score": 3,
+    "kf_time": 80.167,
+    "kf_index": 59,
+    "kf_path": "examples/run/keyframes/frames/kf_060_80.167s.jpg",
+    "bars": [
+      36
+    ],
+    "terms": [],
+    "prices": [],
+    "cue_count": 1,
+    "cues": [
+      16
+    ],
+    "sample_text": "第 36 根收出长上影，上方卖压偏重。",
+    "why": "bar 36"
+  },
+  {
+    "score": 2,
+    "kf_time": 84.167,
+    "kf_index": 61,
+    "kf_path": "examples/run/keyframes/frames/kf_062_84.167s.jpg",
+    "bars": [],
+    "terms": [
+      "回撤",
+      "支撑",
+      "缺口"
+    ],
+    "prices": [
+      "4350"
+    ],
+    "cue_count": 2,
+    "cues": [
+      17,
+      18
+    ],
+    "sample_text": "最后几根回到 4350 支撑，结构没有破。",
+    "why": "回撤,支撑,缺口; 4350"
+  }
+]

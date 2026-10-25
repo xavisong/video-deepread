@@ -1,0 +1,629 @@
+{
+  "source": "examples/demo.mp4",
+  "name": "demo.mp4",
+  "type": "video",
+  "width": 960,
+  "height": 540,
+  "duration": 96.0,
+  "duration_text": "1:36.000",
+  "fps": 6.0,
+  "total_frames": 576,
+  "keyframe_count": 62,
+  "threshold": 0.008,
+  "threshold_mode": "auto",
+  "settings": {
+    "min_time": 0.3,
+    "motion_time": 1.5,
+    "max_frames": 500,
+    "max_width": 640,
+    "format": "jpg",
+    "quality": 78
+  },
+  "output_dir": "examples/run/keyframes",
+  "sheet_only": false,
+  "overview": "examples/run/keyframes/overview_01.jpg",
+  "overviews": [
+    "examples/run/keyframes/overview_01.jpg",
+    "examples/run/keyframes/overview_02.jpg"
+  ],
+  "overview_count": 2,
+  "overview_info": {
+    "path": "examples/run/keyframes/overview_01.jpg",
+    "sheets": [
+      {
+        "path": "examples/run/keyframes/overview_01.jpg",
+        "size": [
+          1599,
+          1420
+        ],
+        "cols": 3,
+        "rows": 4,
+        "cells": 12,
+        "first_index": 0,
+        "last_index": 11
+      },
+      {
+        "path": "examples/run/keyframes/overview_02.jpg",
+        "size": [
+          1599,
+          1420
+        ],
+        "cols": 3,
+        "rows": 4,
+        "cells": 12,
+        "first_index": 12,
+        "last_index": 23
+      }
+    ],
+    "sheet_count": 2,
+    "size": [
+      1599,
+      1420
+    ],
+    "cols": 3,
+    "rows": 4,
+    "cells": 12,
+    "total": 62,
+    "cell_width": 521
+  },
+  "subtitles": [
+    "examples/run/keyframes/subtitles_01.jpg",
+    "examples/run/keyframes/subtitles_02.jpg"
+  ],
+  "subtitle_count": 2,
+  "subtitle_info": {
+    "path": "examples/run/keyframes/subtitles_01.jpg",
+    "sheets": [
+      {
+        "path": "examples/run/keyframes/subtitles_01.jpg",
+        "size": [
+          1620,
+          1345
+        ],
+        "rows": 10,
+        "labels": [
+          "#1  0.00s",
+          "#4  7.17s",
+          "#7  11.17s",
+          "#11  17.00s",
+          "#14  20.83s",
+          "#17  25.17s",
+          "#20  28.67s",
+          "#23  32.50s",
+          "#27  36.50s",
+          "#30  40.67s"
+        ]
+      },
+      {
+        "path": "examples/run/keyframes/subtitles_02.jpg",
+        "size": [
+          1620,
+          1345
+        ],
+        "rows": 10,
+        "labels": [
+          "#33  45.17s",
+          "#36  48.17s",
+          "#40  55.17s",
+          "#43  59.83s",
+          "#46  61.83s",
+          "#49  65.67s",
+          "#52  70.17s",
+          "#56  75.17s",
+          "#59  79.33s",
+          "#62  84.17s"
+        ]
+      }
+    ],
+    "sheet_count": 2,
+    "size": [
+      1620,
+      1345
+    ],
+    "cells": 10,
+    "total": 62,
+    "band": 0.16,
+    "rows_per_sheet": 10,
+    "row_height": 128
+  },
+  "insufficient_visual_change": false,
+  "visual_change_note": null,
+  "keyframes": [
+    {
+      "n": 1,
+      "frame_index": 0,
+      "time": 0.0,
+      "file": "frames/kf_001_0.000s.jpg",
+      "path": "examples/run/keyframes/frames/kf_001_0.000s.jpg",
+      "diff": 0.0
+    },
+    {
+      "n": 2,
+      "frame_index": 31,
+      "time": 5.1667,
+      "file": "frames/kf_002_5.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_002_5.167s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 3,
+      "frame_index": 34,
+      "time": 5.6667,
+      "file": "frames/kf_003_5.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_003_5.667s.jpg",
+      "diff": 0.0003
+    },
+    {
+      "n": 4,
+      "frame_index": 43,
+      "time": 7.1667,
+      "file": "frames/kf_004_7.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_004_7.167s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 5,
+      "frame_index": 55,
+      "time": 9.1667,
+      "file": "frames/kf_005_9.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_005_9.167s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 6,
+      "frame_index": 61,
+      "time": 10.1667,
+      "file": "frames/kf_006_10.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_006_10.167s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 7,
+      "frame_index": 67,
+      "time": 11.1667,
+      "file": "frames/kf_007_11.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_007_11.167s.jpg",
+      "diff": 0.00031
+    },
+    {
+      "n": 8,
+      "frame_index": 78,
+      "time": 13.0,
+      "file": "frames/kf_008_13.000s.jpg",
+      "path": "examples/run/keyframes/frames/kf_008_13.000s.jpg",
+      "diff": 0.00058
+    },
+    {
+      "n": 9,
+      "frame_index": 91,
+      "time": 15.1667,
+      "file": "frames/kf_009_15.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_009_15.167s.jpg",
+      "diff": 0.0003
+    },
+    {
+      "n": 10,
+      "frame_index": 94,
+      "time": 15.6667,
+      "file": "frames/kf_010_15.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_010_15.667s.jpg",
+      "diff": 0.00031
+    },
+    {
+      "n": 11,
+      "frame_index": 102,
+      "time": 17.0,
+      "file": "frames/kf_011_17.000s.jpg",
+      "path": "examples/run/keyframes/frames/kf_011_17.000s.jpg",
+      "diff": 0.00058
+    },
+    {
+      "n": 12,
+      "frame_index": 113,
+      "time": 18.8333,
+      "file": "frames/kf_012_18.833s.jpg",
+      "path": "examples/run/keyframes/frames/kf_012_18.833s.jpg",
+      "diff": 0.00064
+    },
+    {
+      "n": 13,
+      "frame_index": 121,
+      "time": 20.1667,
+      "file": "frames/kf_013_20.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_013_20.167s.jpg",
+      "diff": 0.0003
+    },
+    {
+      "n": 14,
+      "frame_index": 125,
+      "time": 20.8333,
+      "file": "frames/kf_014_20.833s.jpg",
+      "path": "examples/run/keyframes/frames/kf_014_20.833s.jpg",
+      "diff": 0.00059
+    },
+    {
+      "n": 15,
+      "frame_index": 137,
+      "time": 22.8333,
+      "file": "frames/kf_015_22.833s.jpg",
+      "path": "examples/run/keyframes/frames/kf_015_22.833s.jpg",
+      "diff": 0.00064
+    },
+    {
+      "n": 16,
+      "frame_index": 148,
+      "time": 24.6667,
+      "file": "frames/kf_016_24.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_016_24.667s.jpg",
+      "diff": 0.00059
+    },
+    {
+      "n": 17,
+      "frame_index": 151,
+      "time": 25.1667,
+      "file": "frames/kf_017_25.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_017_25.167s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 18,
+      "frame_index": 154,
+      "time": 25.6667,
+      "file": "frames/kf_018_25.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_018_25.667s.jpg",
+      "diff": 0.00028
+    },
+    {
+      "n": 19,
+      "frame_index": 160,
+      "time": 26.6667,
+      "file": "frames/kf_019_26.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_019_26.667s.jpg",
+      "diff": 0.00031
+    },
+    {
+      "n": 20,
+      "frame_index": 172,
+      "time": 28.6667,
+      "file": "frames/kf_020_28.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_020_28.667s.jpg",
+      "diff": 0.00031
+    },
+    {
+      "n": 21,
+      "frame_index": 181,
+      "time": 30.1667,
+      "file": "frames/kf_021_30.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_021_30.167s.jpg",
+      "diff": 0.00062
+    },
+    {
+      "n": 22,
+      "frame_index": 184,
+      "time": 30.6667,
+      "file": "frames/kf_022_30.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_022_30.667s.jpg",
+      "diff": 0.00025
+    },
+    {
+      "n": 23,
+      "frame_index": 195,
+      "time": 32.5,
+      "file": "frames/kf_023_32.500s.jpg",
+      "path": "examples/run/keyframes/frames/kf_023_32.500s.jpg",
+      "diff": 0.00058
+    },
+    {
+      "n": 24,
+      "frame_index": 207,
+      "time": 34.5,
+      "file": "frames/kf_024_34.500s.jpg",
+      "path": "examples/run/keyframes/frames/kf_024_34.500s.jpg",
+      "diff": 0.00057
+    },
+    {
+      "n": 25,
+      "frame_index": 211,
+      "time": 35.1667,
+      "file": "frames/kf_025_35.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_025_35.167s.jpg",
+      "diff": 0.0003
+    },
+    {
+      "n": 26,
+      "frame_index": 214,
+      "time": 35.6667,
+      "file": "frames/kf_026_35.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_026_35.667s.jpg",
+      "diff": 0.0003
+    },
+    {
+      "n": 27,
+      "frame_index": 219,
+      "time": 36.5,
+      "file": "frames/kf_027_36.500s.jpg",
+      "path": "examples/run/keyframes/frames/kf_027_36.500s.jpg",
+      "diff": 0.00057
+    },
+    {
+      "n": 28,
+      "frame_index": 230,
+      "time": 38.3333,
+      "file": "frames/kf_028_38.333s.jpg",
+      "path": "examples/run/keyframes/frames/kf_028_38.333s.jpg",
+      "diff": 0.00061
+    },
+    {
+      "n": 29,
+      "frame_index": 242,
+      "time": 40.3333,
+      "file": "frames/kf_029_40.333s.jpg",
+      "path": "examples/run/keyframes/frames/kf_029_40.333s.jpg",
+      "diff": 0.00062
+    },
+    {
+      "n": 30,
+      "frame_index": 244,
+      "time": 40.6667,
+      "file": "frames/kf_030_40.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_030_40.667s.jpg",
+      "diff": 0.00035
+    },
+    {
+      "n": 31,
+      "frame_index": 254,
+      "time": 42.3333,
+      "file": "frames/kf_031_42.333s.jpg",
+      "path": "examples/run/keyframes/frames/kf_031_42.333s.jpg",
+      "diff": 0.00058
+    },
+    {
+      "n": 32,
+      "frame_index": 265,
+      "time": 44.1667,
+      "file": "frames/kf_032_44.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_032_44.167s.jpg",
+      "diff": 0.00028
+    },
+    {
+      "n": 33,
+      "frame_index": 271,
+      "time": 45.1667,
+      "file": "frames/kf_033_45.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_033_45.167s.jpg",
+      "diff": 0.00037
+    },
+    {
+      "n": 34,
+      "frame_index": 274,
+      "time": 45.6667,
+      "file": "frames/kf_034_45.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_034_45.667s.jpg",
+      "diff": 0.00043
+    },
+    {
+      "n": 35,
+      "frame_index": 277,
+      "time": 46.1667,
+      "file": "frames/kf_035_46.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_035_46.167s.jpg",
+      "diff": 0.00031
+    },
+    {
+      "n": 36,
+      "frame_index": 289,
+      "time": 48.1667,
+      "file": "frames/kf_036_48.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_036_48.167s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 37,
+      "frame_index": 301,
+      "time": 50.1667,
+      "file": "frames/kf_037_50.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_037_50.167s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 38,
+      "frame_index": 304,
+      "time": 50.6667,
+      "file": "frames/kf_038_50.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_038_50.667s.jpg",
+      "diff": 0.00058
+    },
+    {
+      "n": 39,
+      "frame_index": 324,
+      "time": 54.0,
+      "file": "frames/kf_039_54.000s.jpg",
+      "path": "examples/run/keyframes/frames/kf_039_54.000s.jpg",
+      "diff": 0.00058
+    },
+    {
+      "n": 40,
+      "frame_index": 331,
+      "time": 55.1667,
+      "file": "frames/kf_040_55.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_040_55.167s.jpg",
+      "diff": 0.0003
+    },
+    {
+      "n": 41,
+      "frame_index": 336,
+      "time": 56.0,
+      "file": "frames/kf_041_56.000s.jpg",
+      "path": "examples/run/keyframes/frames/kf_041_56.000s.jpg",
+      "diff": 0.00062
+    },
+    {
+      "n": 42,
+      "frame_index": 347,
+      "time": 57.8333,
+      "file": "frames/kf_042_57.833s.jpg",
+      "path": "examples/run/keyframes/frames/kf_042_57.833s.jpg",
+      "diff": 0.00059
+    },
+    {
+      "n": 43,
+      "frame_index": 359,
+      "time": 59.8333,
+      "file": "frames/kf_043_59.833s.jpg",
+      "path": "examples/run/keyframes/frames/kf_043_59.833s.jpg",
+      "diff": 0.00058
+    },
+    {
+      "n": 44,
+      "frame_index": 361,
+      "time": 60.1667,
+      "file": "frames/kf_044_60.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_044_60.167s.jpg",
+      "diff": 0.0003
+    },
+    {
+      "n": 45,
+      "frame_index": 364,
+      "time": 60.6667,
+      "file": "frames/kf_045_60.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_045_60.667s.jpg",
+      "diff": 0.0003
+    },
+    {
+      "n": 46,
+      "frame_index": 371,
+      "time": 61.8333,
+      "file": "frames/kf_046_61.833s.jpg",
+      "path": "examples/run/keyframes/frames/kf_046_61.833s.jpg",
+      "diff": 0.00061
+    },
+    {
+      "n": 47,
+      "frame_index": 382,
+      "time": 63.6667,
+      "file": "frames/kf_047_63.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_047_63.667s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 48,
+      "frame_index": 391,
+      "time": 65.1667,
+      "file": "frames/kf_048_65.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_048_65.167s.jpg",
+      "diff": 0.00038
+    },
+    {
+      "n": 49,
+      "frame_index": 394,
+      "time": 65.6667,
+      "file": "frames/kf_049_65.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_049_65.667s.jpg",
+      "diff": 0.0003
+    },
+    {
+      "n": 50,
+      "frame_index": 406,
+      "time": 67.6667,
+      "file": "frames/kf_050_67.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_050_67.667s.jpg",
+      "diff": 0.00056
+    },
+    {
+      "n": 51,
+      "frame_index": 418,
+      "time": 69.6667,
+      "file": "frames/kf_051_69.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_051_69.667s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 52,
+      "frame_index": 421,
+      "time": 70.1667,
+      "file": "frames/kf_052_70.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_052_70.167s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 53,
+      "frame_index": 424,
+      "time": 70.6667,
+      "file": "frames/kf_053_70.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_053_70.667s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 54,
+      "frame_index": 429,
+      "time": 71.5,
+      "file": "frames/kf_054_71.500s.jpg",
+      "path": "examples/run/keyframes/frames/kf_054_71.500s.jpg",
+      "diff": 0.00056
+    },
+    {
+      "n": 55,
+      "frame_index": 441,
+      "time": 73.5,
+      "file": "frames/kf_055_73.500s.jpg",
+      "path": "examples/run/keyframes/frames/kf_055_73.500s.jpg",
+      "diff": 0.00058
+    },
+    {
+      "n": 56,
+      "frame_index": 451,
+      "time": 75.1667,
+      "file": "frames/kf_056_75.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_056_75.167s.jpg",
+      "diff": 0.00032
+    },
+    {
+      "n": 57,
+      "frame_index": 454,
+      "time": 75.6667,
+      "file": "frames/kf_057_75.667s.jpg",
+      "path": "examples/run/keyframes/frames/kf_057_75.667s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 58,
+      "frame_index": 464,
+      "time": 77.3333,
+      "file": "frames/kf_058_77.333s.jpg",
+      "path": "examples/run/keyframes/frames/kf_058_77.333s.jpg",
+      "diff": 0.00056
+    },
+    {
+      "n": 59,
+      "frame_index": 476,
+      "time": 79.3333,
+      "file": "frames/kf_059_79.333s.jpg",
+      "path": "examples/run/keyframes/frames/kf_059_79.333s.jpg",
+      "diff": 0.00058
+    },
+    {
+      "n": 60,
+      "frame_index": 481,
+      "time": 80.1667,
+      "file": "frames/kf_060_80.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_060_80.167s.jpg",
+      "diff": 0.00029
+    },
+    {
+      "n": 61,
+      "frame_index": 488,
+      "time": 81.3333,
+      "file": "frames/kf_061_81.333s.jpg",
+      "path": "examples/run/keyframes/frames/kf_061_81.333s.jpg",
+      "diff": 0.00058
+    },
+    {
+      "n": 62,
+      "frame_index": 505,
+      "time": 84.1667,
+      "file": "frames/kf_062_84.167s.jpg",
+      "path": "examples/run/keyframes/frames/kf_062_84.167s.jpg",
+      "diff": 0.00069
+    }
+  ]
+}

@@ -54,6 +54,15 @@ visual-first clips, a native video model is the better tool.
 4. **Read**: the agent reads the four overviews plus the reading list.
    The rest of the plan stays on disk for drill-down.
 
+## Examples
+
+[`examples/`](examples/) is a fully synthetic 96-second run: generated video,
+authored captions, 62 keyframes, the semantic plan and a coverage report, all
+produced by [`examples/make_demo.py`](examples/make_demo.py). No third-party
+footage, no cookies, no personal data. Start with
+[`examples/run/frame_plan.md`](examples/run/frame_plan.md) and
+[`examples/run/coverage.json`](examples/run/coverage.json).
+
 ## Features
 
 - Bilibili and YouTube subtitle support.

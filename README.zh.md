@@ -41,6 +41,14 @@ Claude Code、DSH（DeepSeek Harness）或任意 agent 框架调用。仓库里�
    读单（默认 1 分钟 1 张，最多 40 张）。
 4. **读图**：读 4 张总览 + 读单；其余帧留在磁盘按需补读。
 
+## 示例
+
+[`examples/`](examples/) 是一次完整跑通的**合成**示例：96 秒生成视频 + 自撰字幕 +
+62 张关键帧 + 语义计划 + 覆盖率报告，全部由
+[`examples/make_demo.py`](examples/make_demo.py) 产出，不含第三方素材、cookies
+或个人数据。先看 [`examples/run/frame_plan.md`](examples/run/frame_plan.md) 和
+[`examples/run/coverage.json`](examples/run/coverage.json)。
+
 ## 功能
 
 - B 站 / YouTube 字幕。

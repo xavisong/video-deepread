@@ -1,0 +1,38 @@
+[
+  {
+    "score": 4,
+    "kf_time": 20.167,
+    "kf_index": 12,
+    "kf_path": "examples/run/keyframes/frames/kf_013_20.167s.jpg",
+    "bars": [
+      8
+    ],
+    "terms": [
+      "回撤"
+    ],
+    "prices": [],
+    "cue_count": 1,
+    "cues": [
+      4
+    ],
+    "sample_text": "第 8 根出现第一次回撤，看着像假突破。",
+    "why": "bar 8; 回撤"
+  },
+  {
+    "score": 3,
+    "kf_time": 80.167,
+    "kf_index": 59,
+    "kf_path": "examples/run/keyframes/frames/kf_060_80.167s.jpg",
+    "bars": [
+      36
+    ],
+    "terms": [],
+    "prices": [],
+    "cue_count": 1,
+    "cues": [
+      16
+    ],
+    "sample_text": "第 36 根收出长上影，上方卖压偏重。",
+    "why": "bar 36"
+  }
+]
