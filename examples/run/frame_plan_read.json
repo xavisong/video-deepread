@@ -19,6 +19,45 @@
     "why": "bar 8; 回撤"
   },
   {
+    "score": 4,
+    "kf_time": 30.667,
+    "kf_index": 21,
+    "kf_path": "examples/run/keyframes/frames/kf_022_30.667s.jpg",
+    "bars": [
+      12
+    ],
+    "terms": [
+      "均线",
+      "收盘价"
+    ],
+    "prices": [],
+    "cue_count": 1,
+    "cues": [
+      6
+    ],
+    "sample_text": "第 12 根收盘价站上均线，结构开始转多。",
+    "why": "bar 12; 均线,收盘价"
+  },
+  {
+    "score": 4,
+    "kf_time": 50.667,
+    "kf_index": 37,
+    "kf_path": "examples/run/keyframes/frames/kf_038_50.667s.jpg",
+    "bars": [
+      21
+    ],
+    "terms": [
+      "通道"
+    ],
+    "prices": [],
+    "cue_count": 1,
+    "cues": [
+      10
+    ],
+    "sample_text": "第 21 根进入加速段，通道上轨被拉开。",
+    "why": "bar 21; 通道"
+  },
+  {
     "score": 3,
     "kf_time": 80.167,
     "kf_index": 59,

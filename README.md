@@ -216,7 +216,7 @@ targeted single frames (1.5k each), or start with the 4 sheets and come back for
 ## Modes
 
 - **Default**: complete semantic plan plus a reading budget of
-  `min(40, max(1, ceil(duration_minutes)))` frames.
+  `min(40, max(1, ceil(duration_minutes), ceil(plan_frames * 0.25)))` frames.
 - `--read-budget N`: override the reading list size.
 - `--max-frames N`: limit the plan size (time-aware).
 - `--text-only`: subtitles only; no video download or frames.

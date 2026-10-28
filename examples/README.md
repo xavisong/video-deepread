@@ -19,7 +19,7 @@ It exists so you can see what the pipeline actually emits before running it.
 | `run/keyframes/overview_0*.jpg` | 2 overview sheets, 12 cells each |
 | `run/keyframes/subtitles_0*.jpg` | 2 caption-strip sheets (`--subtitles`) |
 | `run/frame_plan.md` | Complete semantic plan as a table (16 unique frames) |
-| `run/frame_plan_read.json` / `frame_plan_top.md` | Default reading list (budget 2) |
+| `run/frame_plan_read.json` / `frame_plan_top.md` | Default reading list (budget 4) |
 | `run/coverage.json` | Plan coverage vs read coverage |
 
 ## Measured numbers
@@ -30,12 +30,12 @@ It exists so you can see what the pipeline actually emits before running it.
 | Cues / cues with a visual need | 18 / 17 |
 | Keyframe pool | 62 frames |
 | Plan | 16 unique frames, needs 17/17, bars 8/8, high priority 11/11 |
-| Default read budget | `ceil(96/60)` = **2** frames -> needs 2/17, bars 2/8 |
+| Default read budget | `max(ceil(96/60), ceil(16 × 0.25))` = **4** frames -> needs 4/17, bars 4/8 |
 | `--read-budget 8` | needs 8/17, bars **8/8**, high priority 8/11 |
 
-The plan is the index, the reading list is a token budget. On a 96-second video
-the default budget is tiny by design; raise it with `--read-budget` when the
-question needs more frames.
+The plan is the index, the reading list is a token budget. The default budget is
+the larger of one frame per minute and a quarter of the plan, so a 96-second video
+gets 4 frames. Raise it with `--read-budget` when the question needs more.
 
 ## Reproduce
 

@@ -4,8 +4,8 @@
   "plan_max_frames": 0,
   "plan_min_gap": 0.0,
   "plan_selected": 16,
-  "read_budget": 2,
-  "read_selected": 2,
+  "read_budget": 4,
+  "read_selected": 4,
   "plan": {
     "selected_frames": 16,
     "bars_mentioned": [
@@ -41,7 +41,7 @@
     "high_priority_pct": 1.0
   },
   "read": {
-    "selected_frames": 2,
+    "selected_frames": 4,
     "bars_mentioned": [
       5,
       8,
@@ -54,26 +54,26 @@
     ],
     "bars_covered": [
       8,
+      12,
+      21,
       36
     ],
     "bars_missing": [
       5,
-      12,
       16,
-      21,
       26,
       31
     ],
-    "bar_coverage": "2/8",
-    "bar_coverage_pct": 0.25,
+    "bar_coverage": "4/8",
+    "bar_coverage_pct": 0.5,
     "needs_total": 17,
-    "needs_covered": 2,
-    "need_coverage": "2/17",
-    "need_coverage_pct": 0.118,
+    "needs_covered": 4,
+    "need_coverage": "4/17",
+    "need_coverage_pct": 0.235,
     "high_priority_total": 11,
-    "high_priority_covered": 2,
-    "high_priority_coverage": "2/11",
-    "high_priority_pct": 0.182
+    "high_priority_covered": 4,
+    "high_priority_coverage": "4/11",
+    "high_priority_pct": 0.364
   },
   "selected_frames": 16,
   "bars_mentioned": [
@@ -105,17 +105,15 @@
   "need_coverage_pct": 1.0,
   "high_priority_coverage": "11/11",
   "high_priority_pct": 1.0,
-  "read_bar_coverage": "2/8",
-  "read_bar_coverage_pct": 0.25,
-  "read_need_coverage": "2/17",
-  "read_need_coverage_pct": 0.118,
-  "read_high_priority_coverage": "2/11",
-  "read_high_priority_pct": 0.182,
+  "read_bar_coverage": "4/8",
+  "read_bar_coverage_pct": 0.5,
+  "read_need_coverage": "4/17",
+  "read_need_coverage_pct": 0.235,
+  "read_high_priority_coverage": "4/11",
+  "read_high_priority_pct": 0.364,
   "read_bars_missing": [
     5,
-    12,
     16,
-    21,
     26,
     31
   ],

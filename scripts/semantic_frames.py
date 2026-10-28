@@ -338,7 +338,7 @@ def main(argv=None) -> int:
     ap.add_argument("--max-frames", type=int, default=None,
                     help="可选：限制计划帧数（默认 0 = 完整计划；>0 时时间分层）")
     ap.add_argument("--read-budget", type=int, default=None,
-                    help="默认读单上限（默认 min(40, max(1, ceil(时长分钟)))）")
+                    help="默认读单上限（默认取「时长分钟」与「计划帧数四分之一」的较大者，最多 40）")
     ap.add_argument("--min-gap", type=float, default=15.0,
                     help="读单/预算计划的非顶格帧最小间隔秒数")
     ap.add_argument("--json-summary", action="store_true", help="只打印精简 JSON")
@@ -412,8 +412,13 @@ def main(argv=None) -> int:
         plan_max, plan_gap = max(0, args.max_frames), args.min_gap
     plan_groups = select_frames(glist, plan_max, plan_gap, watch)
 
-    # 默认读单：1 分钟 1 张，最多 40；不超过计划大小
-    auto_read = min(40, max(1, math.ceil(duration / 60.0))) if duration > 0 else 0
+    # 默认读单：时长与「计划帧数 × 25%」取大者，最多 40，且不超过计划大小。
+    # 只看时长会让短片断崖：96 秒的片子计划 16 帧只分到 2 张 = 12%，而 24/37 分钟的
+    # 片子本来就落在 23%~30%。取大者把短片拉回同一比例，长片几乎不动。
+    auto_read = (min(40, max(1,
+                             math.ceil(duration / 60.0),
+                             math.ceil(len(plan_groups) * 0.25)))
+                 if duration > 0 else 0)
     read_budget = auto_read if args.read_budget is None else max(0, args.read_budget)
     read_budget = min(read_budget, len(plan_groups))
     read_groups = select_frames(plan_groups, read_budget, args.min_gap, watch) \
@@ -501,7 +506,8 @@ def main(argv=None) -> int:
     top_lines = [
         "# 默认读单（时间分散）",
         "",
-        f"- 读单预算：{read_budget} 张（视频 {duration / 60:.1f} 分钟，1 分钟 1 张，最多 40）",
+        f"- 读单预算：{read_budget} 张（视频 {duration / 60:.1f} 分钟；"
+        f"max(时长分钟, 计划 {len(plan_groups)} 帧 × 25%)，最多 40）",
         f"- 预期读图覆盖：bar {read_cov['bar_coverage']}（{pct(read_cov['bar_coverage_pct'])}）；"
         f"需求 {read_cov['need_coverage']}（{pct(read_cov['need_coverage_pct'])}）；"
         f"高优先级 {read_cov['high_priority_coverage']}（{pct(read_cov['high_priority_pct'])}）",
