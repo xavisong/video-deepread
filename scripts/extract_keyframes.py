@@ -671,6 +671,14 @@ def build_overview_sheets(
         font_label = _load_font(label_size)
         label_h = int(label_size * 1.9)
 
+        # 编号烧进画面：小模型数格子会数错（4x4 就开始飘），但读一个数字很准。
+        # 格号 = 跨全部总览图的连续序号（1 起），与格子下方的 #kf 编号 + 时间码互为冗余；
+        # 它压在画面里而不是单独一行，降采样后仍认得出。
+        badge_size = max(22, int(cell_h * 0.15))
+        font_badge = _load_font(badge_size)
+        badge_stroke = max(3, int(badge_size * 0.13))
+        badge_inset = max(4, int(badge_size * 0.22))
+
         W = pad * 2 + c * cw + gap * (c - 1)
         H = pad * 2 + rows * (cell_h + label_h) + gap * max(0, rows - 1)
 
@@ -682,6 +690,10 @@ def build_overview_sheets(
             x = pad + cc * (cw + gap)
             yy = pad + r * (cell_h + label_h + gap)
             sheet.paste(thumb, (x, yy))
+            # 白字 + 黑描边：亮画面、暗画面上都读得出来
+            draw.text((x + badge_inset, yy + badge_inset), str(chunk_idx[i] + 1),
+                      fill=(255, 255, 255), font=font_badge,
+                      stroke_width=badge_stroke, stroke_fill=(0, 0, 0))
             draw.text((x + 2, yy + cell_h + int(label_size * 0.3)), label,
                       fill=(206, 214, 222), font=font_label)
 
